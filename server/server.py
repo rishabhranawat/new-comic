@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-from secret import *
 import openai
 from flask_cors import CORS
 import os
@@ -10,6 +9,10 @@ from stability_sdk import client
 import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation
 import threading
 import uuid
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # app settings
 app = Flask(__name__)
@@ -23,9 +26,9 @@ cors = CORS(app, resource={
 # model/open ai/stability ai settings
 OPEN_AI_CHAT_MODEL = 'gpt-3.5-turbo'
 STABILITY_AI_IMAGE_GEN_MODEL = 'stable-diffusion-xl-1024-v1-0'
-openai.api_key = OPEN_AI_API_KEY
+openai.api_key = os.getenv('OPEN_AI_API_KEY')
 os.environ['STABILITY_HOST'] = 'grpc.stability.ai:443'
-os.environ['STABILITY_KEY'] = STABILITY_AI_API_KEY
+os.environ['STABILITY_KEY'] = os.getenv('STABILITY_AI_API_KEY')
 COMIC_IMAGES_BASE_DIR = '~/news-comic/server/'
 
 # stability generation
