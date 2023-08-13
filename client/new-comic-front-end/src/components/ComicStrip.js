@@ -29,7 +29,7 @@ const ComicStrip = ({
       console.log({imagePath});
       const splitImagePath = imagePath.substring(6);
       console.log({splitImagePath})
-      const path = `https://new-comic-fork-production.up.railway.app/server/${splitImagePath}`;
+      const path = `https://new-comic-fork-production.up.railway.app/${splitImagePath}`;
       console.log({path});
 
       return (
