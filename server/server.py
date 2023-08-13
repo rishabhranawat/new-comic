@@ -114,12 +114,19 @@ def root_endpoint():
 
 @app.route('/server/<image_id>_<int:image_number>.png', methods=['GET'])
 def serve_image(image_id, image_number):
-    # Constructing the image path using the relative directory where images are stored
     relative_path = f"../../server/{image_id}_{image_number}.png"
-    # Converting the relative path to an absolute path
     current_working_directory = os.path.dirname(os.path.abspath(__file__))
     image_path = os.path.join(current_working_directory, relative_path)
-    print(f"Serving image from path: {image_path}")  # Debugging print statement
+    
+    print(f"Current working directory: {current_working_directory}")
+    print(f"Contents of current working directory: {os.listdir(current_working_directory)}")  # Debugging print statement
+    
+    image_directory = os.path.dirname(image_path)
+    print(f"Contents of image directory: {os.listdir(image_directory)}")  # Debugging print statement
+
+    print(f"Relative path: {relative_path}")
+    print(f"Serving image from path: {image_path}")
+
     return send_file(image_path, mimetype='image/png')
 
 @app.route('/api/generate-comic-strip', methods=['POST'])
