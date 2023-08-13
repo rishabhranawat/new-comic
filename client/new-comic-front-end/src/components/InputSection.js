@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import { getComic } from '../actions/getComic';
 import Range from './Range';
 
@@ -6,6 +6,8 @@ import Range from './Range';
 const InputSection = ({
   setComicStrip,
   setImagePaths,
+  setImageUrls,
+  setImageBlobUrls
 }) => {
 
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -17,9 +19,21 @@ const InputSection = ({
 
   const handleClick = () => {
     setButtonLoading(true);
-    getComic({content, numImages}).then(({imagePaths, comicStrip}) => {
+    getComic({content, numImages}).then(({imagePaths, comicStrip, imageData}) => {
       setImagePaths(imagePaths);
       setComicStrip(comicStrip);
+      let imageUrls = [];
+      let imageBlobUrls = [];
+      imageData.forEach((image) => {
+        const imageUrl = URL.createObjectURL(image);
+        imageUrls.push(imageUrl);
+        const blob = image.blobg();
+        const imageBlobUrl = URL.createObjectURL(blob);
+        imageBlobUrls.push(imageBlobUrl);
+        console.log({ imageUrl, imageBlobUrl, type: typeof(image) });
+      })
+      setImageUrls(imageUrls);
+      setImageBlobUrls(imageBlobUrls);
     }).catch((error) => {
       console.log(error);
     })

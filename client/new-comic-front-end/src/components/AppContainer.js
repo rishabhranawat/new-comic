@@ -6,6 +6,8 @@ const AppContainer = () => {
 
   const [imagePaths, setImagePaths] = useState([]);
   const [comicStrip, setComicStrip] = useState([]);
+  const [imageUrls, setImageUrls] = useState([]);
+  const [imageBlobUrls, setImageBlobUrls] = useState([]);
 
 
   return (
@@ -21,10 +23,14 @@ const AppContainer = () => {
         <InputSection 
           setComicStrip={setComicStrip}
           setImagePaths={setImagePaths}
+          setImageUrls={setImageUrls}
+          setImageBlobUrls={setImageBlobUrls}
         />
         <ComicStrip 
           imagePaths={imagePaths}
           comicStrip={comicStrip}
+          imageUrls={imageUrls}
+          imageBlobUrls={imageBlobUrls}
         />
 
       </div>
