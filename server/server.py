@@ -8,6 +8,7 @@ import warnings
 from PIL import Image
 from stability_sdk import client
 import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation
+import threading
 
 # app settings
 app = Flask(__name__)
@@ -53,12 +54,12 @@ def parse_comic_string_response(comic_strip_response):
 	return [x for x in comic_strip_response.split("\n")]
 
 ############################STABILITY##################################
-def generate_comic_strip_for_single_prompt(comic_scene_prompt):
+def generate_comic_strip_for_single_prompt(comic_scene_prompt, scene_num):
 	# Set up our initial generation parameters.
 	answers = stability_api.generate(
-			prompt=comic_scene_prompt,
+			prompt=f'Create a comic scene like the following: {comic_scene_prompt}',
 			seed=4253978046,
-			steps=30,
+			steps=50,
 			cfg_scale=8.0,
 			width=1024, # Generation width, defaults to 512 if not included.
 			height=1024, # Generation height, defaults to 512 if not included.
@@ -74,7 +75,19 @@ def generate_comic_strip_for_single_prompt(comic_scene_prompt):
 									"Please modify the prompt and try again.")
 					if artifact.type == generation.ARTIFACT_IMAGE:
 							img = Image.open(io.BytesIO(artifact.binary))
-							img.save(str(artifact.seed)+ ".png") # Save our generated images with their seed number as the filename.
+							img.save(str(scene_num)+ ".png") # Save our generated images with their seed number as the filename.
+
+def generate_all_comic_scenes(comic_strip_response):
+		threads = []
+		
+		for scene_num, description in enumerate(comic_strip_response):
+				print(scene_num)
+				thread = threading.Thread(target=generate_comic_strip_for_single_prompt, args=(description,scene_num))
+				threads.append(thread)
+				thread.start()
+
+		for thread in threads:
+				thread.join()
 
 @app.route('/api/post', methods=['POST'])
 def post_endpoint():
@@ -87,7 +100,7 @@ def post_endpoint():
 	comic_strip = generate_comic_strip(data['content'])
 	comic_strip_response = parse_comic_string_response(comic_strip)
 
-	generate_comic_strip_for_single_prompt(comic_strip_response[0])
+	generate_all_comic_scenes(comic_strip_response)
 
 	return jsonify(
 		{
