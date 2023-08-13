@@ -29,7 +29,8 @@ STABILITY_AI_IMAGE_GEN_MODEL = 'stable-diffusion-xl-1024-v1-0'
 openai.api_key = os.getenv('OPEN_AI_API_KEY')
 os.environ['STABILITY_HOST'] = 'grpc.stability.ai:443'
 os.environ['STABILITY_KEY'] = os.getenv('STABILITY_AI_API_KEY')
-COMIC_IMAGES_BASE_DIR = '~/news-comic/server/'
+os.environ['STABILITY_KEY'] = STABILITY_AI_API_KEY
+COMIC_IMAGES_BASE_DIR = '../../server/'
 
 # stability generation
 stability_api = client.StabilityInference(
@@ -101,17 +102,19 @@ def generate_all_comic_scenes(comic_strip_response, request_unique_id):
 				thread.join()
 		return [COMIC_IMAGES_BASE_DIR+get_image_path(request_unique_id, scene_num) for scene_num in range(len(comic_strip_response))]
 
+
 @app.route('/', methods=['GET'])
 def root_endpoint():
     return jsonify(
         {
             "message": "Welcome to the Comic Generator API!",
             "endpoints": {
-                "post_comic": "/api/post"
+                "post_comic": "/api/generate-comic-strip"
             }
         }), 200
 
-@app.route('/api/post', methods=['POST'])
+
+@app.route('/api/generate-comic-strip', methods=['POST'])
 def post_endpoint():
 	request_unique_id = str(uuid.uuid4())
 	data = request.get_json()
@@ -127,8 +130,8 @@ def post_endpoint():
 
 	return jsonify(
 		{
-			"comic_strip": comic_strip_response,
-			"image_paths": image_paths
+			"comicStrip": comic_strip_response,
+			"imagePaths": image_paths
 		}), 201
 
 if __name__ == "__main__":

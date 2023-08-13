@@ -1,8 +1,8 @@
-const apiUrl = 'localhost:3000';
+const apiUrl = 'https://new-comic-fork-production.up.railway.app';
 
 export const getComic = async ({ content, numImages }) => {
   return new Promise((resolve, reject) => {
-    fetch(`${apiUrl}/api/post`, {
+    fetch(`${apiUrl}/api/generate-comic-strip`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
