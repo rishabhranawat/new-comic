@@ -1,6 +1,8 @@
 const ComicStrip = ({ 
   imagePaths,
   comicStrip,
+  imageUrls,
+  imageBlobUrls,
  }) => {
 
 //   const comicList = [{
@@ -22,6 +24,9 @@ const ComicStrip = ({
     <div className="flex space-x-4">
 
       {comicStrip.map((caption, index) => {
+
+      const path = `https://new-comic-fork.vercel.app/${imagePaths[index].splice(0,6)}`;
+      console.log({path})
 
       return (
         <div className="flex flex-col justify-center items-center space-y-4" key={index}>
