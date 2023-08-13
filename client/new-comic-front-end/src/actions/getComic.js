@@ -1,4 +1,4 @@
-const apiUrl = 'localhost:3000';
+const apiUrl = 'localhost:5000/api/generate-comic-strip';
 
 export const getComic = async ({ content, numImages }) => {
   return new Promise((resolve, reject) => {
