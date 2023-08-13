@@ -9,7 +9,6 @@ const InputSection = ({
 }) => {
 
   const [buttonLoading, setButtonLoading] = useState(false);
-  const [buttonSucceeded, setButtonSucceeded] = useState(false);
   const [content, setContent] = useState('');
   const [numImages, setNumImages] = useState(4);
 
@@ -27,18 +26,11 @@ const InputSection = ({
   }
 
   useEffect(() => {
-  
+
     setTimeout(() => {
       setButtonLoading(false);
-      setButtonSucceeded(true);
     }, 1500)
   }, [buttonLoading])
-
-  useEffect(() => {
-    setTimeout(() => {
-      setButtonSucceeded(false);
-    }, 1500)
-  }, [buttonSucceeded])
   
   
 
@@ -53,7 +45,7 @@ const InputSection = ({
           placeholder="Enter your article here."
           className="rounded resize-none border p-2"
           value={content}
-          setValue={(e) => { setContent(e.target.value) }}
+          onChange={(e) => { setContent(e.target.value) }}
         />
       </div>
 
@@ -74,9 +66,8 @@ const InputSection = ({
         className="border rounded-lg p-2 bg-pink-500 relative flex justify-center items-center"
         onClick={() => {handleClick()}}
       >
-        <div className={`${buttonLoading || buttonSucceeded ? 'invisible' : ''}`}>Generate comic strip</div>
+        <div className={`${buttonLoading ? 'invisible' : ''}`}>Generate comic strip</div>
         <div className={`${buttonLoading ? '' : 'invisible'} absolute`}>Loading...</div>
-        <div className={`${buttonSucceeded ? '' : 'invisible'} absolute`}>Succeeded</div>
 
       </button>
     </div>
