@@ -29,7 +29,6 @@ STABILITY_AI_IMAGE_GEN_MODEL = 'stable-diffusion-xl-1024-v1-0'
 openai.api_key = os.getenv('OPEN_AI_API_KEY')
 os.environ['STABILITY_HOST'] = 'grpc.stability.ai:443'
 os.environ['STABILITY_KEY'] = os.getenv('STABILITY_AI_API_KEY')
-os.environ['STABILITY_KEY'] = STABILITY_AI_API_KEY
 COMIC_IMAGES_BASE_DIR = '../../server/'
 
 # stability generation
