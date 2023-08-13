@@ -20,7 +20,6 @@ const InputSection = ({
     getComic({content, numImages}).then(({imagePaths, comicStrip}) => {
       setImagePaths(imagePaths);
       setComicStrip(comicStrip);
-      setButtonLoading(false);
     }).catch((error) => {
       console.log(error);
     })
