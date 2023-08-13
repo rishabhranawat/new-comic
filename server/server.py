@@ -112,6 +112,10 @@ def root_endpoint():
             }
         }), 200
 
+@app.route('/server/<image_id>_<int:image_number>.png', methods=['GET'])
+def serve_image(image_id, image_number):
+    image_path = f"../../server/{image_id}_{image_number}.png"
+    return send_file(image_path, mimetype='image/png')
 
 @app.route('/api/generate-comic-strip', methods=['POST'])
 def post_endpoint():
