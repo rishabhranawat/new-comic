@@ -1,25 +1,31 @@
+import { useState } from 'react';
 import ComicStrip from './ComicStrip';
+import InputSection from './InputSection';
 
 const AppContainer = () => {
 
+  const [imagePaths, setImagePaths] = useState([]);
+  const [comicStrip, setComicStrip] = useState([]);
+
+
   return (
-    <div className="p-4">
-      <div className="flex flex-col space-y-4 items-center justify-center">
-        <textarea 
-          id="comic-text" 
-          rows="4" 
-          cols="50" 
-          placeholder="Enter your article here."
-          className="rounded resize-none border p-2"
+    <div className="p-4 bg-cyan-100">
+      <div className="flex flex-col space-y-4 items-center h-screen">
+
+        <div className="text-center flex flex-col space-y-2 mb-8">
+          <h1 className="text-3xl font-semibold text-gray-700">News that doesn't confuse!</h1>
+          <h3 className="text-gray-700">Stay up-to-date by converting news article to comic strips.</h3>
+        </div>
+
+
+        <InputSection 
+          setComicStrip={setComicStrip}
+          setImagePaths={setImagePaths}
         />
-
-        <button
-          className="border rounded-lg p-2"
-        >
-          Generate comic strip
-        </button>
-
-        <ComicStrip />
+        <ComicStrip 
+          imagePaths={imagePaths}
+          comicStrip={comicStrip}
+        />
 
       </div>
     </div>
