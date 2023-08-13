@@ -1,5 +1,4 @@
-from flask import Flask, request, jsonify
-from secret import *
+from flask import Flask, request, jsonify, send_file
 import openai
 from flask_cors import CORS
 import os
@@ -10,6 +9,10 @@ from stability_sdk import client
 import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation
 import threading
 import uuid
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # app settings
 app = Flask(__name__)
@@ -23,10 +26,10 @@ cors = CORS(app, resource={
 # model/open ai/stability ai settings
 OPEN_AI_CHAT_MODEL = 'gpt-3.5-turbo'
 STABILITY_AI_IMAGE_GEN_MODEL = 'stable-diffusion-xl-1024-v1-0'
-openai.api_key = OPEN_AI_API_KEY
+openai.api_key = os.getenv('OPEN_AI_API_KEY')
 os.environ['STABILITY_HOST'] = 'grpc.stability.ai:443'
-os.environ['STABILITY_KEY'] = STABILITY_AI_API_KEY
-COMIC_IMAGES_BASE_DIR = '~/news-comic/server/'
+os.environ['STABILITY_KEY'] = os.getenv('STABILITY_AI_API_KEY')
+COMIC_IMAGES_BASE_DIR = '../../server/'
 
 # stability generation
 stability_api = client.StabilityInference(
@@ -98,25 +101,50 @@ def generate_all_comic_scenes(comic_strip_response, request_unique_id):
 				thread.join()
 		return [COMIC_IMAGES_BASE_DIR+get_image_path(request_unique_id, scene_num) for scene_num in range(len(comic_strip_response))]
 
-@app.route('/api/post', methods=['POST'])
+
+@app.route('/', methods=['GET'])
+def root_endpoint():
+    return jsonify(
+        {
+            "message": "Welcome to the Comic Generator API!",
+            "endpoints": {
+                "post_comic": "/api/generate-comic-strip"
+            }
+        }), 200
+
+@app.route('/server/<image_id>_<int:image_number>.png', methods=['GET'])
+def serve_image(image_id, image_number):
+    # Constructing the image path using the current working directory
+    current_working_directory = os.path.dirname(os.path.abspath(__file__))
+    image_path = os.path.join(current_working_directory, f"{image_id}_{image_number}.png")
+
+    print(f"Serving image from path: {image_path}")
+
+    return send_file(image_path, mimetype='image/png')
+
+@app.route('/api/generate-comic-strip', methods=['POST'])
 def post_endpoint():
-	request_unique_id = str(uuid.uuid4())
-	data = request.get_json()
-	if not data:
-		return jsonify({"message": "No input data provided"}), 400
-	if 'content' not in data:
-		return jsonify({"message": "Missing news content"}), 400
+    request_unique_id = str(uuid.uuid4())
+    data = request.get_json()
+    if not data:
+        return jsonify({"message": "No input data provided"}), 400
+    if 'content' not in data:
+        return jsonify({"message": "Missing news content"}), 400
 
-	comic_strip = generate_comic_strip(data['content'])
-	comic_strip_response = parse_comic_string_response(comic_strip)
+    comic_strip = generate_comic_strip(data['content'])
+    comic_strip_response = parse_comic_string_response(comic_strip)
 
-	image_paths = generate_all_comic_scenes(comic_strip_response, request_unique_id)
+    image_paths = generate_all_comic_scenes(comic_strip_response, request_unique_id)
 
-	return jsonify(
-		{
-			"comic_strip": comic_strip_response,
-			"image_paths": image_paths
-		}), 201
+    # Printing the full paths of the generated images for debugging
+    for image_path in image_paths:
+        print(f"Generated image path: {image_path}")
+
+    return jsonify(
+        {
+            "comicStrip": comic_strip_response,
+            "imagePaths": image_paths
+        }), 201
 
 if __name__ == "__main__":
 	app.run(debug=True)
