@@ -115,7 +115,7 @@ def root_endpoint():
 @app.route('/server/<image_id>_<int:image_number>.png', methods=['GET'])
 def serve_image(image_id, image_number):
     # Constructing the image path using the relative directory
-    relative_path = f"../../server/{image_id}_{image_number}.png"
+    relative_path = f"../../{image_id}_{image_number}.png"
     # Converting the relative path to an absolute path
     image_path = os.path.abspath(os.path.join(os.getcwd(), relative_path))
     return send_file(image_path, mimetype='image/png')
