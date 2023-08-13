@@ -25,14 +25,6 @@ const InputSection = ({
     })
   }
 
-  useEffect(() => {
-
-    setTimeout(() => {
-      setButtonLoading(false);
-    }, 1500)
-  }, [buttonLoading])
-  
-  
 
   return (
     <div className="flex flex-col space-y-4">
@@ -63,7 +55,7 @@ const InputSection = ({
 
 
       <button
-        className="border rounded-lg p-2 bg-pink-500 relative flex justify-center items-center"
+        className="border rounded-lg p-2 bg-pink-500 relative flex justify-center items-center hover:bg-pink-600 text-white font-semibold"
         onClick={() => {handleClick()}}
       >
         <div className={`${buttonLoading ? 'invisible' : ''}`}>Generate comic strip</div>
