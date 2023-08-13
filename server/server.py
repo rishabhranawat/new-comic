@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from secret import *
 import openai
 from flask_cors import CORS
@@ -10,6 +10,8 @@ from stability_sdk import client
 import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation
 import threading
 import uuid
+import base64
+
 
 # app settings
 app = Flask(__name__)
@@ -26,7 +28,7 @@ STABILITY_AI_IMAGE_GEN_MODEL = 'stable-diffusion-xl-1024-v1-0'
 openai.api_key = OPEN_AI_API_KEY
 os.environ['STABILITY_HOST'] = 'grpc.stability.ai:443'
 os.environ['STABILITY_KEY'] = STABILITY_AI_API_KEY
-COMIC_IMAGES_BASE_DIR = '../../server/'
+COMIC_IMAGES_BASE_DIR = '/Users/rishabh/news-comic/server/'
 
 # stability generation
 stability_api = client.StabilityInference(
@@ -84,10 +86,11 @@ def generate_comic_strip_for_single_prompt(comic_scene_prompt, scene_num, reques
 							img = Image.open(io.BytesIO(artifact.binary))
 							img.save(get_image_path(request_unique_id, scene_num)) # Save our generated images with their seed number as the filename. 
 
+
 def generate_all_comic_scenes(comic_strip_response, request_unique_id):
 		threads = []
 
-		for scene_num, description in enumerate(comic_strip_response):
+		for scene_num, description in enumerate(comic_strip_response[:2]):
 				print(scene_num)
 				thread = threading.Thread(target=generate_comic_strip_for_single_prompt, 
 					args=(description,scene_num, request_unique_id))
@@ -96,7 +99,8 @@ def generate_all_comic_scenes(comic_strip_response, request_unique_id):
 
 		for thread in threads:
 				thread.join()
-		return [COMIC_IMAGES_BASE_DIR+get_image_path(request_unique_id, scene_num) for scene_num in range(len(comic_strip_response))]
+		return [get_image_path(request_unique_id, scene_num) for scene_num in range(len(comic_strip_response))]
+
 
 @app.route('/api/generate-comic-strip', methods=['POST'])
 def post_endpoint():
@@ -112,10 +116,13 @@ def post_endpoint():
 
 	image_paths = generate_all_comic_scenes(comic_strip_response, request_unique_id)
 
+	image_data = []
+
 	return jsonify(
 		{
 			"comicStrip": comic_strip_response,
-			"imagePaths": image_paths
+			"imagePaths": image_paths,
+			"imageData": image_data
 		}), 201
 
 if __name__ == "__main__":
