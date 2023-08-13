@@ -101,6 +101,16 @@ def generate_all_comic_scenes(comic_strip_response, request_unique_id):
 				thread.join()
 		return [COMIC_IMAGES_BASE_DIR+get_image_path(request_unique_id, scene_num) for scene_num in range(len(comic_strip_response))]
 
+@app.route('/', methods=['GET'])
+def root_endpoint():
+    return jsonify(
+        {
+            "message": "Welcome to the Comic Generator API!",
+            "endpoints": {
+                "post_comic": "/api/post"
+            }
+        }), 200
+
 @app.route('/api/post', methods=['POST'])
 def post_endpoint():
 	request_unique_id = str(uuid.uuid4())
