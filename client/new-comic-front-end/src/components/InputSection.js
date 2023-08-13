@@ -25,12 +25,6 @@ const InputSection = ({
     })
   }
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setButtonLoading(false);
-  //   }, 1500)
-  // }, [buttonLoading])
-  
 
   return (
     <div className="flex flex-col space-y-4">
