@@ -26,7 +26,7 @@ STABILITY_AI_IMAGE_GEN_MODEL = 'stable-diffusion-xl-1024-v1-0'
 openai.api_key = OPEN_AI_API_KEY
 os.environ['STABILITY_HOST'] = 'grpc.stability.ai:443'
 os.environ['STABILITY_KEY'] = STABILITY_AI_API_KEY
-COMIC_IMAGES_BASE_DIR = '~/news-comic/server/'
+COMIC_IMAGES_BASE_DIR = '../../server/'
 
 # stability generation
 stability_api = client.StabilityInference(
@@ -114,8 +114,8 @@ def post_endpoint():
 
 	return jsonify(
 		{
-			"comic_strip": comic_strip_response,
-			"image_paths": image_paths
+			"comicStrip": comic_strip_response,
+			"imagePaths": image_paths
 		}), 201
 
 if __name__ == "__main__":
