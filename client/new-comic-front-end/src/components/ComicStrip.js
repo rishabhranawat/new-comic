@@ -25,7 +25,7 @@ const ComicStrip = ({
 
       {comicStrip.map((caption, index) => {
 
-      const path = `https://new-comic-fork.vercel.app/${imagePaths[index].splice(0,6)}`;
+      const path = `https://new-comic-fork-production.up.railway.app/server/${imagePaths[index].splice(0,6)}`;
       console.log({path})
 
       return (
