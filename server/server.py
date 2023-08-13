@@ -90,7 +90,7 @@ def generate_comic_strip_for_single_prompt(comic_scene_prompt, scene_num, reques
 def generate_all_comic_scenes(comic_strip_response, request_unique_id):
 		threads = []
 
-		for scene_num, description in enumerate(comic_strip_response):
+		for scene_num, description in enumerate(comic_strip_response[:1]):
 				print(scene_num)
 				thread = threading.Thread(target=generate_comic_strip_for_single_prompt, 
 					args=(description,scene_num, request_unique_id))
