@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import openai
 from flask_cors import CORS
 import os
@@ -114,28 +114,37 @@ def root_endpoint():
 
 @app.route('/server/<image_id>_<int:image_number>.png', methods=['GET'])
 def serve_image(image_id, image_number):
-    image_path = f"../../server/{image_id}_{image_number}.png"
+    # Constructing the image path using the current working directory
+    current_working_directory = os.path.dirname(os.path.abspath(__file__))
+    image_path = os.path.join(current_working_directory, f"{image_id}_{image_number}.png")
+
+    print(f"Serving image from path: {image_path}")
+
     return send_file(image_path, mimetype='image/png')
 
 @app.route('/api/generate-comic-strip', methods=['POST'])
 def post_endpoint():
-	request_unique_id = str(uuid.uuid4())
-	data = request.get_json()
-	if not data:
-		return jsonify({"message": "No input data provided"}), 400
-	if 'content' not in data:
-		return jsonify({"message": "Missing news content"}), 400
+    request_unique_id = str(uuid.uuid4())
+    data = request.get_json()
+    if not data:
+        return jsonify({"message": "No input data provided"}), 400
+    if 'content' not in data:
+        return jsonify({"message": "Missing news content"}), 400
 
-	comic_strip = generate_comic_strip(data['content'])
-	comic_strip_response = parse_comic_string_response(comic_strip)
+    comic_strip = generate_comic_strip(data['content'])
+    comic_strip_response = parse_comic_string_response(comic_strip)
 
-	image_paths = generate_all_comic_scenes(comic_strip_response, request_unique_id)
+    image_paths = generate_all_comic_scenes(comic_strip_response, request_unique_id)
 
-	return jsonify(
-		{
-			"comicStrip": comic_strip_response,
-			"imagePaths": image_paths
-		}), 201
+    # Printing the full paths of the generated images for debugging
+    for image_path in image_paths:
+        print(f"Generated image path: {image_path}")
+
+    return jsonify(
+        {
+            "comicStrip": comic_strip_response,
+            "imagePaths": image_paths
+        }), 201
 
 if __name__ == "__main__":
 	app.run(debug=True)
