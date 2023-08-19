@@ -49,8 +49,8 @@ def get_gpt_response(content):
 		messages=[{"role": "user", "content": content}])
 	return chat_completion.choices[0].message.content
 
-def generate_comic_strip(content):
-	prompt = f'Convert this news story into a comic strip with exactly 5 scene descriptions: {content}. \
+def generate_comic_strip(content, num_images):
+	prompt = f'Convert this news story into a comic strip with exactly {num_images} scene descriptions: {content}. \
 		Please keep the information factual.\
 		Keep the format in an ordered list. \
 		Just provide 1 line descriptions.'
@@ -131,7 +131,7 @@ def post_endpoint():
     if 'content' not in data:
         return jsonify({"message": "Missing news content"}), 400
 
-    comic_strip = generate_comic_strip(data['content'])
+    comic_strip = generate_comic_strip(data['content'], data['numImages'])
     comic_strip_response = parse_comic_string_response(comic_strip)
 
     image_paths = generate_all_comic_scenes(comic_strip_response, request_unique_id)
