@@ -1,4 +1,4 @@
-const apiUrl = 'http://localhost:5000';
+const apiUrl = 'https://new-comic-production.up.railway.app';
 
 export const getComic = async ({ content, numImages }) => {
   return new Promise((resolve, reject) => {
