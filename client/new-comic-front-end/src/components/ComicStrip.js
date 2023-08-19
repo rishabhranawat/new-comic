@@ -5,33 +5,13 @@ const ComicStrip = ({
   imageBlobUrls,
  }) => {
 
-//   const comicList = [{
-//     comicImage: "https://via.placeholder.com/150",
-//     comicText: "Message 1"
-// }, {
-//     comicImage: "https://via.placeholder.com/150",
-//     comicText: "Message 2"
-//   }, {
-//     comicImage: "https://via.placeholder.com/150",
-//     comicText: "Message 3"
-//   }, {
-//     comicImage: "https://via.placeholder.com/150",
-//     comicText: "Message 4"
-//   }];
-
   return (
 
     <div className="flex space-x-4">
 
       {comicStrip.map((caption, index) => {
-
-      const imagePath = imagePaths[index];
-      console.log({imagePath});
-      const splitImagePath = imagePath.substring(6);
-      console.log({splitImagePath})
-      const path = `https://new-comic-fork-production.up.railway.app/${splitImagePath}`;
-      console.log({path});
-
+      const splitImagePath = imagePaths[index].substring(6);
+      const path = `https://new-comic-production.up.railway.app/${splitImagePath}`;
       return (
         <div className="flex flex-col justify-center items-center space-y-4" key={index}>
             <img 
