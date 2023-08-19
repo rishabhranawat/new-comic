@@ -56,7 +56,7 @@ const InputSection = ({
       </div>
 
       <div>
-        <div className="text-sm font-semibold text-gray-700">Number of images</div>
+        <div className="text-sm font-semibold text-gray-700">Number of images: {numImages}</div>
         <Range
           value={numImages}
           setValue={setNumImages}
@@ -64,7 +64,6 @@ const InputSection = ({
           max={6}
           set={1}
         />
-        <div className="text-gray-700 text-sm">{numImages} images</div>
       </div>
 
 

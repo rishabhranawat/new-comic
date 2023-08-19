@@ -11,12 +11,10 @@ const AppContainer = () => {
 
 
   return (
-    <div className="p-4 bg-cyan-100">
+    <div className="p-4 bg-gray-100">
       <div className="flex flex-col space-y-4 items-center h-screen">
-
         <div className="text-center flex flex-col space-y-2 mb-8">
-          <h1 className="text-3xl font-semibold text-gray-700">News that doesn't confuse!</h1>
-          <h3 className="text-gray-700">Stay up-to-date by converting news article to comic strips.</h3>
+          <h1 className="text-3xl font-semibold text-gray-700">Mirth</h1>
         </div>
 
 
